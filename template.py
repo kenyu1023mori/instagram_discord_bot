@@ -4,6 +4,7 @@ from instaloader import Instaloader, Profile
 from datetime import datetime, time, timedelta
 import asyncio
 import logging
+import sys
 
 # Discord token settings
 DISCORD_TOKEN = "YOUR_DISCORD_TOKEN"    # Replace with your Discord bot token
@@ -38,8 +39,19 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
+    
+    if len(sys.argv) != 3:
+        print("Usage: python template.py <hour> <minute>")
+        return
+    try:
+        target_hour = int(sys.argv[1])
+        target_minute = int(sys.argv[2])
+    except ValueError:
+        print("Hour and minute should be integers.")
+        return
+
     now = datetime.now()
-    target_time = time(9, 0) # Change this to the disired time
+    target_time = time(target_hour, target_minute)
     first_run = datetime.combine(now.date(), target_time)
     if now > first_run:
         first_run += timedelta(days=1)
